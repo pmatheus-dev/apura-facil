@@ -96,7 +96,7 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
                             lista_candidatos.append(candidato)
 
                 # Ordenar os candidatos por votos válidos (vap) em ordem decrescente
-                lista_candidatos.sort(key=lambda x: x.get("vap", 0), reverse=True)
+                lista_candidatos.sort(key=lambda x: int(x.get("vap", 0)), reverse=True)
 
                 # Processar cada candidato
                 for candidato in lista_candidatos:
@@ -135,7 +135,7 @@ def main():
         # Botão para o usuário atualizar manualmente
         
         processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo)
-        time.sleep(10)
+        time.sleep(3)
         st.rerun()
 
 # Chamar a função principal
