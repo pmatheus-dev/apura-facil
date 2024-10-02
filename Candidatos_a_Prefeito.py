@@ -118,7 +118,7 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
 def main():
     while 1 + 1 == 2:
         st.title("Resultados das Eleições para Prefeito - Santana do Acaraú")
-        st.write("Acompanhe os resultados atualizados dos candidatos a Vereador.")
+        st.write("Acompanhe os resultados atualizados dos candidatos a Prefeito.")
         hoje = datetime.datetime.now()
 
         st.write(hoje)
