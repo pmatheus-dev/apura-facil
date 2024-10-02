@@ -33,11 +33,21 @@ def baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand)
 # Função para exibir informações de cada candidato
 def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao, votos_validos, percentual_votos, sqcand):
     # Exibe a imagem do candidato
+    cor_borda = "rgba(255, 0, 0, 1)"
+    nome_cor_borda = "red"
+    if situacao != "Não eleito" and situacao != "":
+        if "Eleito" in situacao:
+            cor_borda = "rgba(0, 255, 0, 1)"
+            nome_cor_borda = "green"
+
+        else:
+            cor_borda = "rgba(255, 255, 0, 1)"
+            nome_cor_borda = "yellow"
     with stylable_container(
-        key="container_with_border",
+        key=f"container_with_border_{nome_cor_borda}",
         css_styles="""
             {
-                border: 1px solid rgba(0, 255, 0, 1);
+                border: 2px solid """ + f"{cor_borda}" + """;
                 border-radius: 0.5rem;
                 padding: calc(1em - 1px)
             }

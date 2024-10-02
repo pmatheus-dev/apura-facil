@@ -33,12 +33,21 @@ def baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand)
 # Função para exibir informações de cada candidato
 def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao, votos_validos, percentual_votos, sqcand):
     # Exibe a imagem do candidato
+    cor_borda = "rgba(255, 0, 0, 1)"
+    nome_cor_borda = "red"
+    if situacao != "Não eleito" and situacao != "":
+        if "Eleito" in situacao:
+            cor_borda = "rgba(0, 255, 0, 1)"
+            nome_cor_borda = "green"
 
+        else:
+            cor_borda = "rgba(255, 255, 0, 1)"
+            nome_cor_borda = "yellow"
     with stylable_container(
-        key="container_with_border",
+        key=f"container_with_border_{nome_cor_borda}",
         css_styles="""
             {
-                border: 1px solid rgba(0, 255, 0, 1);
+                border: 2px solid """ + f"{cor_borda}" + """;
                 border-radius: 0.5rem;
                 padding: calc(1em - 1px)
             }
@@ -87,11 +96,13 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
                             lista_candidatos.append(candidato)
 
                 # Ordenar os candidatos por votos válidos (vap) em ordem decrescente
-                lista_candidatos.sort(key=lambda x: x.get("vap", 0), reverse=True)
+                lista_candidatos.sort(key=lambda x: int(x.get("vap", 0)), reverse=True)
+
 
                 # Processar cada candidato
                 for candidato in lista_candidatos:
                     nome = candidato.get("nmu", "Desconhecido")
+                    print(nome)
                     numero = candidato.get("n", "Desconhecido")
                     posicao = candidato.get("seq", "Desconhecido")
                     eleito = "Sim" if candidato.get("e", "n") == "s" else "Não"
@@ -126,7 +137,7 @@ def main():
         # Botão para o usuário atualizar manualmente
         
         processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo)
-        time.sleep(10)
+        time.sleep(3)
         st.rerun()
 
 # Chamar a função principal
