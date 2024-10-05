@@ -54,14 +54,13 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
     ):
         c = st.container()
         with c:
-            col1, col2 = st.columns([0.2, 0.8])
-            col1.image(f'./fotos_cand/{cargo}/{sqcand}.jpeg', width=110)
+            col1, col2 = st.columns([0.3, 0.7])
+            col1.image(f'./fotos_cand/{cargo}/{sqcand}.jpeg', width=140, )
             # Exibe as informações do candidato
-            col2.write(f"### {posicao}º lugar: {nome} (Nº{numero})")
-            col2.write(f"**Votos Válidos**: {votos_validos} votos")
-            col2.write(f"**Percentual de Votos Válidos**: {percentual_votos}%")
-            col2.write(f"**Eleito**: {eleito}")
-            col2.write(f"**Situação**: {situacao}") 
+            col2.markdown(f'''
+                       ### {nome} - {numero}\n
+                        **Votos Válidos**: {votos_validos} votos ({percentual_votos}%)\n
+                        **Situação**: {situacao}''') 
     st.write(f"---")
 # Função para processar os dados dos candidatos e gerar as imagens
 def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
@@ -72,15 +71,19 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
         response = requests.get(url)
         if response.status_code == 200:
             dados = response.json()
-            data = dados.get("dg", "")
-            hora = dados.get("hg", "")
+            data = dados.get("dt", "") if dados.get("dt", "") != "" else dados.get("dg", "")
+            hora = dados.get("ht", "") if dados.get("ht", "") != "" else dados.get("hg", "")
+            qtd_secoes = dados.get("s", [])
             percent_urna = dados.get("s", {}).get("pst", "")
-
+            votos = dados.get("v", [])
             # Exibe informações gerais da eleição
             st.write(f"#### Última atualização: {data} às {hora}")
-            st.write(f"**Urnas Apuradas**: {percent_urna}%")
-            st.divider()
-            # st.write(f"**Cargo**: {cargo.capitalize()}")
+            st.write(f"**{qtd_secoes['st']} seções apuradas ({percent_urna}%) de {qtd_secoes['ts']} seções totais**")
+            col1, col2, col3 = st.columns(3)
+
+            col1.write(f'''🟢 **Votos Válidos: {votos['vv']} votos ({votos['pvv']}%)**''')
+            col2.write(f'''⚪ **Votos Brancos: {votos['vb']} votos ({votos['pvb']}%)**''')
+            col3.write(f'''⚫ **Votos Nulos: {votos['tvn']} votos ({votos['ptvn']}%)**''')
 
             # Extrair a lista de candidatos
             carg = dados.get("carg", [])
@@ -100,7 +103,6 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
                 # Processar cada candidato
                 for candidato in lista_candidatos:
                     nome = candidato.get("nmu", "Desconhecido")
-                    print(nome)
                     numero = candidato.get("n", "Desconhecido")
                     posicao = candidato.get("seq", "Desconhecido")
                     eleito = "Sim" if candidato.get("e", "n") == "s" else "Não"
@@ -125,17 +127,13 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
 
 # Função principal da aplicação Streamlit
 def main():
-    while 1 + 1 == 2:
-        st.title("Resultados das Eleições para Prefeito - Santana do Acaraú")
-        st.write("Acompanhe os resultados atualizados dos candidatos a Prefeito.")
-        hoje = datetime.datetime.now()
-
-        st.write(hoje)
-
-        # Botão para o usuário atualizar manualmente
+    while True:
+        st.markdown('''
+                    ## Eleições para Prefeito 2024 - Santana do Acaraú
+                    ''')
         
         processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo)
-        time.sleep(3)
+        time.sleep(5)
         st.rerun()
 
 # Chamar a função principal
