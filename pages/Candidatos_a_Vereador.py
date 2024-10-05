@@ -12,10 +12,9 @@ ciclo = "ele2024"
 eleicao = "619"  # 1º turno = 619 | 2º turno = 620
 estado = "ce"
 codigoMunicipio = "15415"  # 15415 para Santana
-cargo = "0011"  # 0011 para prefeito | 0013 para vereador
+cargo = "0013"  # 0011 para prefeito | 0013 para vereador
 codigoEleicao = f'000{eleicao}'  # alterar quantidade de 0's dependendo do código
 arquivo = f'{estado}{codigoMunicipio}-c{cargo}-e{codigoEleicao}-u.json'
-arquivo = "ce15415-c0013-e000619-u.json"
 
 # Função para baixar a foto do candidato
 def baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand):
@@ -67,7 +66,6 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
 # Função para processar os dados dos candidatos e gerar as imagens
 def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
     url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'
-    url = "https://raw.githubusercontent.com/pmatheus-dev/tse/refs/heads/main/ce15415-c0013-e000619-u.json"
     cargo = "prefeito" if "0011" in arquivo else "vereador"
     
     try:
