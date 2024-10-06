@@ -136,7 +136,7 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, 
 def main():
     while True:
         st.markdown('''
-                    ## Eleições para Vereador 2024 - Santana do Acaraú - CE
+                    ## Eleições para Prefeito 2024 - Santana do Acaraú - CE
                     ''')
         
         processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunicipio)
