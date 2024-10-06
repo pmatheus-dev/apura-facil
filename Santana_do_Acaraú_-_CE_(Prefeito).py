@@ -5,6 +5,8 @@ import datetime
 import time
 from streamlit_extras.stylable_container import stylable_container
 
+st.set_page_config(layout="wide")
+
 # CONSTANTES
 host = "resultados.tse.jus.br"
 ambiente = "oficial"  # oficial ou simulado
@@ -17,8 +19,10 @@ codigoEleicao = f'000{eleicao}'  # alterar quantidade de 0's dependendo do códi
 arquivo = f'{estado}{codigoMunicipio}-c{cargo}-e{codigoEleicao}-u.json'
 
 # Função para baixar a foto do candidato
-def baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand):
-    caminho_foto = f'./fotos_cand/{cargo}/{sqcand}.jpeg'
+def baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand, codigoMunic):
+    caminho_foto = f'./fotos_cand_{estado}_{codigoMunic}_{cargo}/{sqcand}.jpeg'
+    if not os.path.isdir(f"./fotos_cand_{estado}_{codigoMunic}_{cargo}"):
+        os.mkdir(f"./fotos_cand_{estado}_{codigoMunic}_{cargo}")
     if not os.path.isfile(caminho_foto):
         url_foto = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/fotos/{estado}/{sqcand}.jpeg'
         try:
@@ -30,12 +34,12 @@ def baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand)
             print(f"Erro ao tentar baixar a foto: {e}")
 
 # Função para exibir informações de cada candidato
-def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao, votos_validos, percentual_votos, sqcand):
+def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao, votos_validos, percentual_votos, sqcand, codigoMunic):
     # Exibe a imagem do candidato
     cor_borda = "rgba(255, 0, 0, 1)"
     nome_cor_borda = "red"
     if situacao != "Não eleito" and situacao != "":
-        if "Eleito" in situacao:
+        if "Eleito" in situacao or "turno" in situacao:
             cor_borda = "rgba(0, 255, 0, 1)"
             nome_cor_borda = "green"
 
@@ -55,7 +59,7 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
         c = st.container()
         with c:
             col1, col2 = st.columns([0.3, 0.7])
-            col1.image(f'./fotos_cand/{cargo}/{sqcand}.jpeg', width=140, )
+            col1.image(f"./fotos_cand_{estado}_{codigoMunic}_{cargo}/{sqcand}.jpeg", width=130)
             # Exibe as informações do candidato
             col2.markdown(f'''
                        ### {nome} - {numero}\n
@@ -63,7 +67,7 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
                         **Situação**: {situacao}''') 
     st.write(f"---")
 # Função para processar os dados dos candidatos e gerar as imagens
-def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
+def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunic):
     url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'
     cargo = "prefeito"
     
@@ -77,13 +81,16 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
             percent_urna = dados.get("s", {}).get("pst", "")
             votos = dados.get("v", [])
             # Exibe informações gerais da eleição
-            st.write(f"#### Última atualização: {data} às {hora}")
-            st.write(f"**{qtd_secoes['st']} seções apuradas ({percent_urna}%) de {qtd_secoes['ts']} seções totais**")
+            st.write(f"##### Atualizado dia {data} às {hora}")
+            st.progress(float(percent_urna.replace(",", ".")) / 100, f"**{qtd_secoes['st']} seções apuradas ({percent_urna}%) de {qtd_secoes['ts']} seções totais**")
+            st.write()
             col1, col2, col3 = st.columns(3)
 
             col1.write(f'''🟢 **Votos Válidos: {votos['vv']} votos ({votos['pvv']}%)**''')
             col2.write(f'''⚪ **Votos Brancos: {votos['vb']} votos ({votos['pvb']}%)**''')
             col3.write(f'''⚫ **Votos Nulos: {votos['tvn']} votos ({votos['ptvn']}%)**''')
+
+            st.divider()
 
             # Extrair a lista de candidatos
             carg = dados.get("carg", [])
@@ -112,9 +119,9 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
                     sqcand = candidato.get("sqcand", "Desconhecido")
 
                     # Baixar a foto do candidato
-                    baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand)
+                    baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand, codigoMunic)
 
-                    exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao, votos_validos, percentual_votos, sqcand)
+                    exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao, votos_validos, percentual_votos, sqcand, codigoMunic)
 
 
                     # Gerar a imagem do candidato com todas as informações
@@ -129,10 +136,10 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo):
 def main():
     while True:
         st.markdown('''
-                    ## Eleições para Prefeito 2024 - Santana do Acaraú
+                    ## Eleições para Prefeito 2024 - Santana do Acaraú - CE
                     ''')
         
-        processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo)
+        processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunicipio)
         time.sleep(5)
         st.rerun()
 
