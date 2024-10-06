@@ -13,7 +13,7 @@ ambiente = "oficial"  # oficial ou simulado
 ciclo = "ele2024"
 eleicao = "619"  # 1º turno = 619 | 2º turno = 620
 estado = "ce"
-codigoMunicipio = "15415"  # 15415 para Santana
+codigoMunicipio = "14515"  # 15415 para Santana
 cargo = "0011"  # 0011 para prefeito | 0013 para vereador
 codigoEleicao = f'000{eleicao}'  # alterar quantidade de 0's dependendo do código
 arquivo = f'{estado}{codigoMunicipio}-c{cargo}-e{codigoEleicao}-u.json'
@@ -66,7 +66,6 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
                         **Votos Válidos**: {votos_validos} votos ({percentual_votos}%)\n
                         **Situação**: {situacao}''') 
     st.write(f"---")
-    print(f"{nome} - {numero} - {votos_validos} - {percentual_votos} - {situacao}")
 # Função para processar os dados dos candidatos e gerar as imagens
 def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunic):
     url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'
@@ -137,11 +136,11 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, 
 def main():
     while True:
         st.markdown('''
-                    ## Eleições para Prefeito 2024 - Santana do Acaraú - CE
+                    ## Eleições para Prefeito 2024 - São Paulo - SP
                     ''')
         
         processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunicipio)
-        time.sleep(60)
+        time.sleep(5)
         st.rerun()
 
 # Chamar a função principal

@@ -17,8 +17,6 @@ codigoMunicipio = "15415"  # 15415 para Santana
 cargo = "0013"  # 0011 para prefeito | 0013 para vereador
 codigoEleicao = f'000{eleicao}'  # alterar quantidade de 0's dependendo do código
 arquivo = f'{estado}{codigoMunicipio}-c{cargo}-e{codigoEleicao}-u.json'
-arquivo = "ce15415-c0013-e000619-u.json"
-
 
 # Função para baixar a foto do candidato
 def baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand, codigoMunic):
@@ -63,19 +61,19 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
             col1, col2 = st.columns([0.3, 0.7])
             col1.image(f"./fotos_cand_{estado}_{codigoMunic}_{cargo}/{sqcand}.jpeg", width=130)
             # Exibe as informações do candidato
-            col2.write(f'''
+            col2.markdown(f'''
                        ### {nome} - {numero}\n
                         **Votos Válidos**: {votos_validos} votos ({percentual_votos}%)\n
-                        **Situação**: {situacao}''')  
+                        **Situação**: {situacao}''') 
     st.write(f"---")
 # Função para processar os dados dos candidatos e gerar as imagens
 def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunic):
-    url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'    
-    cargo = "vereador"
+    url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'
+    cargo = "prefeito"
     
     try:
         response = requests.get(url)
-        if response.status_code ==  200:
+        if response.status_code == 200:
             dados = response.json()
             data = dados.get("dt", "") if dados.get("dt", "") != "" else dados.get("dg", "")
             hora = dados.get("ht", "") if dados.get("ht", "") != "" else dados.get("hg", "")
@@ -93,7 +91,6 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, 
             col3.write(f'''⚫ **Votos Nulos: {votos['tvn']} votos ({votos['ptvn']}%)**''')
 
             st.divider()
-            # st.write(f"**Cargo**: {cargo.capitalize()}")
 
             # Extrair a lista de candidatos
             carg = dados.get("carg", [])
@@ -108,6 +105,7 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, 
 
                 # Ordenar os candidatos por votos válidos (vap) em ordem decrescente
                 lista_candidatos.sort(key=lambda x: int(x.get("vap", 0)), reverse=True)
+
 
                 # Processar cada candidato
                 for candidato in lista_candidatos:
@@ -138,11 +136,11 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, 
 def main():
     while True:
         st.markdown('''
-                    ## Eleições para Vereador 2024 - Santana do Acaraú - CE
+                    ## Eleições para Prefeito 2024 - São Paulo - SP
                     ''')
         
         processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunicipio)
-        time.sleep(60)
+        time.sleep(5)
         st.rerun()
 
 # Chamar a função principal
