@@ -70,14 +70,12 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
     st.write(f"---")
 # Função para processar os dados dos candidatos e gerar as imagens
 def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunic):
-    url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'
-    url = "https://resultados.tse.jus.br/oficial/ele2024/619/dados/ce/ce15415-c0013-e000619-u.json"
-    
+    url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'    
     cargo = "vereador"
     
     try:
         response = requests.get(url)
-        if True:
+        if response.status_code ==  200:
             dados = response.json()
             data = dados.get("dt", "") if dados.get("dt", "") != "" else dados.get("dg", "")
             hora = dados.get("ht", "") if dados.get("ht", "") != "" else dados.get("hg", "")

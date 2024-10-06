@@ -17,7 +17,6 @@ codigoMunicipio = "15415"  # 15415 para Santana
 cargo = "0011"  # 0011 para prefeito | 0013 para vereador
 codigoEleicao = f'000{eleicao}'  # alterar quantidade de 0's dependendo do código
 arquivo = f'{estado}{codigoMunicipio}-c{cargo}-e{codigoEleicao}-u.json'
-arquivo = "ce15415-c0011-e000619-u.json"
 
 # Função para baixar a foto do candidato
 def baixar_foto_candidato(host, ambiente, ciclo, eleicao, estado, cargo, sqcand, codigoMunic):
@@ -71,13 +70,11 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
 # Função para processar os dados dos candidatos e gerar as imagens
 def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunic):
     url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'
-    url = "https://resultados.tse.jus.br/oficial/ele2024/619/dados/ce/ce15415-c0011-e000619-u.json"
-    print(url)
     cargo = "prefeito"
     
     try:
         response = requests.get(url)
-        if True:
+        if response.status_code == 200:
             dados = response.json()
             data = dados.get("dt", "") if dados.get("dt", "") != "" else dados.get("dg", "")
             hora = dados.get("ht", "") if dados.get("ht", "") != "" else dados.get("hg", "")
