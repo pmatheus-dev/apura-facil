@@ -66,6 +66,7 @@ def exibir_informacoes_candidato(cargo, nome, numero, posicao, eleito, situacao,
                         **Votos Válidos**: {votos_validos} votos ({percentual_votos}%)\n
                         **Situação**: {situacao}''') 
     st.write(f"---")
+    print(f"{nome} - {numero} - {votos_validos} - {percentual_votos} - {situacao}")
 # Função para processar os dados dos candidatos e gerar as imagens
 def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunic):
     url = f'https://{host}/{ambiente}/{ciclo}/{eleicao}/dados/{estado}/{arquivo}'
@@ -81,7 +82,7 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, 
             percent_urna = dados.get("s", {}).get("pst", "")
             votos = dados.get("v", [])
             # Exibe informações gerais da eleição
-            # st.write(f"##### Atualizado dia {data} às {hora}")
+            st.write(f"##### Atualizado dia {data} às {hora}")
             st.progress(float(percent_urna.replace(",", ".")) / 100, f"**{qtd_secoes['st']} seções apuradas ({percent_urna}%) de {qtd_secoes['ts']} seções totais**")
             st.write()
             col1, col2, col3 = st.columns(3)
@@ -140,7 +141,7 @@ def main():
                     ''')
         
         processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, codigoMunicipio)
-        time.sleep(10)
+        time.sleep(60)
         st.rerun()
 
 # Chamar a função principal
