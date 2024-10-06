@@ -73,7 +73,7 @@ def processar_dados_candidatos(host, ambiente, ciclo, eleicao, estado, arquivo, 
     
     try:
         response = requests.get(url)
-        if response.status_code == 200:
+        if True:
             dados = response.json()
             data = dados.get("dt", "") if dados.get("dt", "") != "" else dados.get("dg", "")
             hora = dados.get("ht", "") if dados.get("ht", "") != "" else dados.get("hg", "")
