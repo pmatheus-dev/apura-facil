@@ -13,7 +13,7 @@ ambiente = "oficial"  # oficial ou simulado
 ciclo = "ele2024"
 eleicao = "619"  # 1º turno = 619 | 2º turno = 620
 estado = "ce"
-codigoMunicipio = "14515"  # 15415 para Santana
+codigoMunicipio = "15415"  # 15415 para Santana
 cargo = "0011"  # 0011 para prefeito | 0013 para vereador
 codigoEleicao = f'000{eleicao}'  # alterar quantidade de 0's dependendo do código
 arquivo = f'{estado}{codigoMunicipio}-c{cargo}-e{codigoEleicao}-u.json'
