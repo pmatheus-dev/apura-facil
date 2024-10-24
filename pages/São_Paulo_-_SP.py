@@ -11,7 +11,7 @@ st.set_page_config(layout="wide")
 host = "resultados.tse.jus.br"
 ambiente = "oficial"  # oficial ou simulado
 ciclo = "ele2024"
-eleicao = "619"  # 1º turno = 619 | 2º turno = 620
+eleicao = "620"  # 1º turno = 619 | 2º turno = 620
 estado = "sp"
 codigoMunicipio = "71072"  # 15415 para Santana
 cargo = "0011"  # 0011 para prefeito | 0013 para vereador
